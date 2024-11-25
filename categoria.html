@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Categoria: </title>
+    <link rel="stylesheet" href="css/categoria.css">
+</head>
+<body>
+    <header>
+        <h1>Categoria: <span id="categoria-nome"></span></h1>
+    </header>
+    <main>
+        <section>
+            <h2>Membros cadastrados em "<span id="categoria-nome-lista"></span>"</h2>
+            <ul id="lista-membros">
+                <!-- Lista de membros será carregada aqui -->
+            </ul>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Sua Igreja</p>
+    </footer>
+
+    <script>
+        // Simulação de dados armazenados localmente (substitua por um banco de dados futuramente)
+        let membrosPorCategoria = {
+            "Novo convertido": [
+                { nome: "João", whatsapp: "123456789", endereco: "Rua A, 123" },
+                { nome: "Maria", whatsapp: "987654321", endereco: "Rua B, 456" }
+            ],
+            "Membro de casa": [
+                { nome: "Carlos", whatsapp: "456789123", endereco: "Rua C, 789" }
+            ],
+            "Jovem": [
+                { nome: "Luiz", whatsapp: "321654987", endereco: "Rua D, 101" }
+            ],
+            "Adolescente": [
+                { nome: "Pedro", whatsapp: "789123456", endereco: "Rua E, 202" }
+            ],
+            "Kids": [
+                { nome: "Sofia", whatsapp: "654321987", endereco: "Rua F, 303" }
+            ],
+            "Escola bíblica (EBD)": [
+                { nome: "Lucas", whatsapp: "159753456", endereco: "Rua G, 404" }
+            ]
+        };
+
+        // Função para pegar o parâmetro "categoria" da URL
+        function getCategoriaFromURL() {
+            const params = new URLSearchParams(window.location.search);
+            return params.get("categoria");
+        }
+
+        // Pegando a categoria da URL
+        const categoria = getCategoriaFromURL();
+        if (!categoria || !membrosPorCategoria[categoria]) {
+            alert("Categoria inválida ou não encontrada!");
+            window.location.href = "index.html"; // Redireciona para a página inicial
+        } else {
+            // Atualizando os elementos da página
+            document.getElementById("categoria-nome").textContent = categoria;
+            document.getElementById("categoria-nome-lista").textContent = categoria;
+
+            // Função para exibir os membros cadastrados
+            function mostrarMembros() {
+                const listaMembros = document.getElementById("lista-membros");
+                listaMembros.innerHTML = ""; // Limpar a lista antes de adicionar os membros
+
+                membrosPorCategoria[categoria].forEach((membro, index) => {
+                    const li = document.createElement("li");
+                    li.innerHTML = `
+                        ${membro.nome} - Whatsapp: ${membro.whatsapp} - Endereço: ${membro.endereco}
+                        <button onclick="removerMembro(${index})">Remover</button>
+                    `;
+                    listaMembros.appendChild(li);
+                });
+            }
+
+            // Função para remover um membro
+            window.removerMembro = function(index) {
+                membrosPorCategoria[categoria].splice(index, 1); // Remove o membro pelo índice
+                mostrarMembros(); // Atualiza a lista
+            }
+
+            // Exibindo os membros
+            mostrarMembros();
+        }
+    </script>
+</body>
+</html>
